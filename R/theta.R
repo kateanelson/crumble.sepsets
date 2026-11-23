@@ -42,7 +42,7 @@ theta <- function(train, valid, vars, params, learners, control) {
 			b3_valid <- theta_y$preds[[j]]
 
 			theta2 <- mlr3superlearner::mlr3superlearner(
-				data = add_psuedo(train$data[, na.omit(c(vars@A, vars@W, vars@Z))], b3_train),
+				data = add_psuedo(train$data[, na.omit(c(vars@A, vars@W, vars@Z)), drop = FALSE], b3_train),
 				target = "tmp_crumble_pseudo_y",
 				library = learners,
 				outcome_type = "continuous",
@@ -55,7 +55,7 @@ theta <- function(train, valid, vars, params, learners, control) {
 			b2_valid <- theta2$preds[[k]]
 
 			theta1 <- mlr3superlearner::mlr3superlearner(
-				data = add_psuedo(train$data[, c(vars@A, vars@W)], b2_train),
+				data = add_psuedo(train$data[, c(vars@A, vars@W), drop = FALSE], b2_train),
 				target = "tmp_crumble_pseudo_y",
 				library = learners,
 				outcome_type = "continuous",
@@ -121,7 +121,7 @@ theta <- function(train, valid, vars, params, learners, control) {
 		b2_valid <- theta2$preds[[k]]
 
 		theta1 <- mlr3superlearner::mlr3superlearner(
-			data = add_psuedo(train$data[, c(vars@A, vars@W)], b2_train),
+			data = add_psuedo(train$data[, c(vars@A, vars@W), drop = FALSE], b2_train),
 			target = "tmp_crumble_pseudo_y",
 			library = learners,
 			outcome_type = "continuous",

@@ -17,12 +17,23 @@
 #'	A vector containing the column names of the mediator variables.
 #' @param moc [\code{character}]\cr
 #'  An optional vector containing the column names of the mediator-outcome confounders.
-#' @param covar [\code{character}]\cr
-#'  An vector containing the column names of baseline covariates to be
-#'  controlled for.
+#' @param covar [\code{character} or \code{list}]\cr
+#'  Baseline covariate column names. A character vector uses the same covariates
+#'  throughout. A named list can specify separate vectors for treatment and
+#'  mediation density ratios (\code{trt}), the outcome observation model
+#'  (\code{cens}), and the sequential outcome regressions (\code{outcome}).
+#'  Omitted or \code{NULL} entries use no baseline covariates for that model.
+#'  For randomized effects, the union of \code{trt} and \code{outcome}
+#'  covariates is used to construct the permuted mediator-outcome confounders.
+#'  For example, \code{list(trt = "w1", cens = "w2", outcome = c("w1", "w3"))}
+#'  specifies three covariate sets. Each set must retain the variables needed
+#'  to identify the corresponding nuisance function.
 #' @param obs [\code{character(1)}]\cr
 #'  An optional column name (with values coded as 0 or 1) for whether or not the \code{outcome} is observed.
 #'  Must be provided if there is missingness in the outcome! Default is \code{NULL}.
+#'  A logistic regression of \code{obs} on treatment, mediators, mediator-outcome
+#'  confounders, and the \code{cens} covariates supplies inverse probability
+#'  weights for the final outcome residual.
 #' @param id [\code{character(1)}]\cr
 #'  An optional column name containing cluster level identifiers.
 #' @param d0 [\code{closure}]\cr
@@ -55,6 +66,17 @@
 #' \item{call}{The matched call.}
 #' \item{effect}{The estimated effect type.}
 #'
+#' @rawRd \encoding{UTF-8}
+#'
+#' @references
+#' Liu, R., Williams, N. T., Rudolph, K. E., and Díaz, I. (2025).
+#' General targeted machine learning for modern causal mediation analysis.
+#' \doi{10.48550/arXiv.2408.14620}.
+#'
+#' Vo, T.-T., Williams, N., Liu, R., Rudolph, K. E., and Díaz, I. (2026).
+#' Recanting twins: Addressing intermediate confounding in mediation analysis.
+#' \doi{10.1002/sim.70432}.
+#'
 #' @importFrom checkmate assert_data_frame assert_function assert_numeric
 #'
 #' @export
@@ -77,13 +99,22 @@ crumble <- function(data,
 										control = crumble_control()) {
 
 	# Perform initial checks
-	assert_data_frame(data[, c(trt, outcome, mediators, moc, covar, obs, id)])
-	assert_not_missing(data, trt, covar, mediators, moc, obs)
+	assert_data_frame(data)
+	covar <- covariate_sets(covar)
+	all_covar <- unique(unlist(covar, use.names = FALSE))
+	variables <- c(trt, outcome, mediators, moc, all_covar, obs, id)
+	checkmate::assert_subset(variables, names(data))
+	assert_not_missing(data, trt, all_covar, mediators, moc, obs)
 	assert_function(d0, nargs = 2, null.ok = TRUE)
 	assert_function(d1, nargs = 2, null.ok = TRUE)
 	assert_function(nn_module)
+	if (!is.null(obs)) {
+		if (!all(data[[obs]] %in% c(0, 1))) {
+			stop("The 'obs' column must contain only 0 and 1.", call. = FALSE)
+		}
+		data[[outcome]][data[[obs]] == 0] <- NA
+	}
 	assert_binary_0_1(data, outcome)
-	assert_binary_0_1(data, obs)
 	assert_effect_type(moc, match.arg(effect))
 	assert_numeric(weights, len = nrow(data), finite = TRUE, any.missing = FALSE)
 
@@ -103,7 +134,9 @@ crumble <- function(data,
 			Y = outcome,
 			M = mediators,
 			Z = moc %??% NA_character_,
-			W = covar,
+			W = covar$outcome,
+			W_trt = covar$trt,
+			W_cens = covar$cens,
 			C = obs %??% NA_character_,
 			id = id %??% NA_character_
 		),
@@ -117,16 +150,19 @@ crumble <- function(data,
 
 	# Create folds for cross fitting
 	folds <- make_folds(cd@data, control$crossfit_folds, cd@vars@id, cd@vars@Y)
+	obs_probability <- estimate_obs_probability(cd, folds)
 
 	# Estimate \theta nuisance parameters
 	thetas <- estimate_theta(cd, thetas, folds, params, learners, control)
 
 	# Estimate density ratios, alpha natural
 	alpha_ns <- estimate_phi_n_alpha(cd, folds, params, nn_module, control)
+	if (!is.null(alpha_ns)) alpha_ns$alpha3 <- alpha_ns$alpha3 / obs_probability
 	eif_ns <- calc_eifs(cd, alpha_ns, thetas, eif_n)
 
   # Estimate density ratios, alpha randomized
 	alpha_rs <- estimate_phi_r_alpha(cd, folds, params, nn_module, control)
+	if (!is.null(alpha_rs)) alpha_rs$alpha4 <- alpha_rs$alpha4 / obs_probability
 	eif_rs <- calc_eifs(cd, alpha_rs, thetas, eif_r)
 
 	# Estimates ---------------------------------------------------------------

@@ -3,8 +3,6 @@ crumble_data <- S7::new_class("crumble_data",
 		data = S7::new_property(S7::class_data.frame),
 		vars = S7::new_property(S7::new_class("crumble_vars")),
 		weights = S7::new_property(S7::class_numeric),
-		d0 = S7::new_property(S7::class_function, default = NULL),
-		d1 = S7::new_property(S7::class_function, default = NULL),
 		data_0 = S7::new_property(S7::class_data.frame),
 		data_1 = S7::new_property(S7::class_data.frame),
 		data_0zp = S7::new_property(S7::class_data.frame),
@@ -22,8 +20,6 @@ crumble_data <- S7::new_class("crumble_data",
 			data = data,
 			vars = vars,
 			weights = normalize(weights),
-			d0 = d0,
-			d1 = d1,
 			data_0 = shift_data(data, vars@A, vars@C, d0),
 			data_1 = shift_data(data, vars@A, vars@C, d1),
 			data_0zp = data.frame(),
@@ -31,7 +27,8 @@ crumble_data <- S7::new_class("crumble_data",
 		)
 	},
 	validator = function(self) {
-		all_vars <- c(self@vars@A, self@vars@W, self@vars@Z, self@vars@M, self@vars@C, self@vars@Y)
+		vars <- self@vars
+		all_vars <- c(vars@A, vars@W, vars@W_trt, vars@W_cens, vars@Z, vars@M, vars@C, vars@Y)
 		all_vars <- as.vector(na.omit(all_vars))
 
 		if (!all(all_vars %in% names(self@data))) {

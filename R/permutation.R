@@ -11,7 +11,8 @@ add_zp <- function(cd, moc, control) {
 
 linear_permutation <- function(data) {
 	D <- dist(data)
-	D <- D / max(D)
+	max_distance <- max(D)
+	if (max_distance > 0) D <- D / max_distance
 	d  <- as.vector(t(as.matrix(D)))
 	n <- nrow(data)
 	rows <- c(as.numeric(gl(n, n, n^2)), as.numeric(gl(n, n, n^2)) + n)
@@ -24,13 +25,14 @@ linear_permutation <- function(data) {
 set_zp <- function(cd, folds) {
 	folds <- make_folds(cd@data, folds, cd@vars@id)
 
-	AW <- one_hot_encode(cd@data, c(cd@vars@A, cd@vars@W))
+	baseline <- union(cd@vars@W_trt, cd@vars@W)
+	AW <- one_hot_encode(cd@data, c(cd@vars@A, baseline))
 	Z <- cd@data[, cd@vars@Z, drop = FALSE]
 
 	permute <- function(i) {
 		zp <- data.frame(matrix(NA, nrow = nrow(AW), ncol = ncol(Z)))
 		names(zp) <- names(Z)
-		P <- linear_permutation(AW[i, ])
+		P <- linear_permutation(AW[i, , drop = FALSE])
 		for (z in names(zp)) {
 			zp[i, z] <- as.vector(P %*% Z[i, z])
 		}

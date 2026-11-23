@@ -35,7 +35,7 @@ phi_n_alpha <- function(train, valid, vars, architecture, params, control) {
 	alpha1 <- Alpha(
 		train = train,
 		valid = valid,
-		vars = na.omit(c(vars@A, vars@W)),
+		vars = na.omit(c(vars@A, vars@W_trt)),
 		architecture = architecture,
 		.f = .f1,
 		weights = NULL,
@@ -45,7 +45,7 @@ phi_n_alpha <- function(train, valid, vars, architecture, params, control) {
 	alpha2 <- Alpha(
 		train = train,
 		valid = valid,
-		vars = na.omit(c(vars@A, vars@Z, vars@W)),
+		vars = na.omit(c(vars@A, vars@Z, vars@W_trt)),
 		architecture = architecture,
 		.f = .f2,
 		weights = alpha1$train,
@@ -55,7 +55,7 @@ phi_n_alpha <- function(train, valid, vars, architecture, params, control) {
 	alpha3 <- Alpha(
 		train = train,
 		valid = valid,
-		vars = na.omit(c(vars@A, vars@C, vars@M, vars@Z, vars@W)),
+		vars = na.omit(c(vars@A, vars@M, vars@Z, vars@W_trt)),
 		architecture = architecture,
 		.f = .f3,
 		weights = alpha2$train,
@@ -109,7 +109,7 @@ phi_r_alpha <- function(train, valid, vars, architecture, params, control) {
 	alpha1 <- Alpha(
 		train = train,
 		valid = valid,
-		vars = na.omit(c(vars@A, vars@W)),
+		vars = na.omit(c(vars@A, vars@W_trt)),
 		architecture = architecture,
 		.f = .f1,
 		weights = NULL,
@@ -119,7 +119,7 @@ phi_r_alpha <- function(train, valid, vars, architecture, params, control) {
 	alpha2 <- Alpha(
 		train = train,
 		valid = valid,
-		vars = na.omit(c(vars@A, vars@Z, vars@W)),
+		vars = na.omit(c(vars@A, vars@Z, vars@W_trt)),
 		architecture = architecture,
 		.f = .f2,
 		weights = alpha1$train,
@@ -129,7 +129,7 @@ phi_r_alpha <- function(train, valid, vars, architecture, params, control) {
 	alpha3 <- Alpha(
 		train = train,
 		valid = valid,
-		vars = na.omit(c(vars@A, vars@M, vars@W)),
+		vars = na.omit(c(vars@A, vars@M, vars@W_trt)),
 		architecture = architecture,
 		.f = .f3,
 		weights = alpha2$train,
@@ -139,7 +139,7 @@ phi_r_alpha <- function(train, valid, vars, architecture, params, control) {
 	alpha4 <- Alpha(
 		train = train,
 		valid = valid,
-		vars = na.omit(c(vars@A, vars@C, vars@Z, vars@M, vars@W)),
+		vars = na.omit(c(vars@A, vars@Z, vars@M, vars@W_trt)),
 		architecture = architecture,
 		.f = .f4,
 		weights = alpha3$train,
