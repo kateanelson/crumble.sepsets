@@ -39,13 +39,24 @@ A vector containing the column names of the mediator variables.}
 \item{moc}{[\code{character}]\cr
 An optional vector containing the column names of the mediator-outcome confounders.}
 
-\item{covar}{[\code{character}]\cr
-An vector containing the column names of baseline covariates to be
-controlled for.}
+\item{covar}{[\code{character} or \code{list}]\cr
+Baseline covariate column names. A character vector uses the same covariates
+throughout. A named list can specify separate vectors for treatment and
+mediation density ratios (\code{trt}), the outcome observation model
+(\code{cens}), and the sequential outcome regressions (\code{outcome}).
+Omitted or \code{NULL} entries use no baseline covariates for that model.
+For randomized effects, the union of \code{trt} and \code{outcome}
+covariates is used to construct the permuted mediator-outcome confounders.
+For example, \code{list(trt = "w1", cens = "w2", outcome = c("w1", "w3"))}
+specifies three covariate sets. Each set must retain the variables needed
+to identify the corresponding nuisance function.}
 
 \item{obs}{[\code{character(1)}]\cr
 An optional column name (with values coded as 0 or 1) for whether or not the \code{outcome} is observed.
-Must be provided if there is missingness in the outcome! Default is \code{NULL}.}
+Must be provided if there is missingness in the outcome! Default is \code{NULL}.
+A logistic regression of \code{obs} on treatment, mediators, mediator-outcome
+confounders, and the \code{cens} covariates supplies inverse probability
+weights for the final outcome residual.}
 
 \item{id}{[\code{character(1)}]\cr
 An optional column name containing cluster level identifiers.}
@@ -121,3 +132,13 @@ if (require("mma") && torch::torch_is_installed()) {
 }
 }
 }
+\references{
+Liu, R., Williams, N. T., Rudolph, K. E., and Díaz, I. (2025).
+General targeted machine learning for modern causal mediation analysis.
+\doi{10.48550/arXiv.2408.14620}.
+
+Vo, T.-T., Williams, N., Liu, R., Rudolph, K. E., and Díaz, I. (2026).
+Recanting twins: Addressing intermediate confounding in mediation analysis.
+\doi{10.1002/sim.70432}.
+}
+\encoding{UTF-8}
