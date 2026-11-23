@@ -7,7 +7,8 @@
 \method{tidy}{crumble}(x, ...)
 }
 \arguments{
-\item{x}{A `crumble` object produced by a call to [crumble::crumble()].}
+\item{x}{A \code{crumble} object produced by a call to
+\code{\link[=crumble]{crumble.sepsets::crumble()}}.}
 
 \item{...}{Unused, included for generic consistency only.}
 }

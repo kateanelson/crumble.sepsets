@@ -4,7 +4,8 @@ generics::tidy
 
 #' Tidy a(n) crumble object
 #'
-#' @param x A `crumble` object produced by a call to [crumble::crumble()].
+#' @param x A \code{crumble} object produced by a call to
+#'   \code{\link[=crumble]{crumble.sepsets::crumble()}}.
 #' @param ... Unused, included for generic consistency only.
 #'
 #' @return A tidy [tibble::tibble()] summarizing information about the model.
