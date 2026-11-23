@@ -3,20 +3,18 @@
 
 > crumble (verb): break or fall apart into small fragments
 
-# crumble
+# crumble.sepsets
 
 <!-- badges: start -->
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![CRAN
-status](https://www.r-pkg.org/badges/version/crumble)](https://CRAN.R-project.org/package=crumble)
 [![License: GPL
 v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 <!-- badges: end -->
 
-*crumble* implements a modern, unified estimation strategy (Liu et al.
+*crumble.sepsets* implements a modern, unified estimation strategy (Liu et al.
 2024) for common mediation estimands: natural effects (Pearl 2022),
 organic effects (Lok 2015), interventional effects (Vansteelandt and
 Daniel 2017), recanting twins (Vo et al. 2024), in causal inference in
@@ -33,7 +31,7 @@ This work was supported by the National Institute on Drug Abuse
 ### Installation
 
 ``` r
-remotes::install_github("nt-williams/crumble")
+remotes::install_github("kateanelson/crumble.sepsets")
 ```
 
 ### Features
@@ -65,7 +63,7 @@ remotes::install_github("nt-williams/crumble")
 ### Example(s)
 
 ``` r
-library(crumble)
+library(crumble.sepsets)
 library(mlr3extralearners)
 
 data(weight_behavior, package = "mma")

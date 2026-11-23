@@ -16,22 +16,22 @@ knitr::opts_chunk$set(
 
 > crumble (verb): break or fall apart into small fragments
 
-# crumble
+# crumble.sepsets
 
 <!-- badges: start -->
 
-[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental) [![CRAN status](https://www.r-pkg.org/badges/version/crumble)](https://CRAN.R-project.org/package=crumble) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 <!-- badges: end -->
 
-*crumble* implements a modern, unified estimation strategy [@liu2024general] for common mediation estimands: natural effects [@pearl2022], organic effects [@lok2015], interventional effects [@vansteelandt2017], recanting twins [@vo2024], in causal inference in combination with modified treatment policies. It makes use of recent advancements in "Riesz-learning" to estimate a set of required nuisance parameters using deep learning. The result is a software package that is capable of estimating mediation effects with binary, categorical, continuous, or multivariate exposures with high-dimensional mediators and mediator-outcome confounders using machine learning.
+*crumble.sepsets* implements a modern, unified estimation strategy [@liu2024general] for common mediation estimands: natural effects [@pearl2022], organic effects [@lok2015], interventional effects [@vansteelandt2017], recanting twins [@vo2024], in causal inference in combination with modified treatment policies. It makes use of recent advancements in "Riesz-learning" to estimate a set of required nuisance parameters using deep learning. The result is a software package that is capable of estimating mediation effects with binary, categorical, continuous, or multivariate exposures with high-dimensional mediators and mediator-outcome confounders using machine learning.
 
 This work was supported by the National Institute on Drug Abuse [R00DA042127].
 
 ### Installation
 
 ```{r eval=FALSE}
-remotes::install_github("nt-williams/crumble")
+remotes::install_github("kateanelson/crumble.sepsets")
 ```
 
 ### Features
@@ -63,7 +63,7 @@ remotes::install_github("nt-williams/crumble")
 ### Example(s)
 
 ```{r eval=FALSE}
-library(crumble)
+library(crumble.sepsets)
 library(mlr3extralearners)
 
 data(weight_behavior, package = "mma")
