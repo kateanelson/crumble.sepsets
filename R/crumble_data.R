@@ -28,7 +28,7 @@ crumble_data <- S7::new_class("crumble_data",
 	},
 	validator = function(self) {
 		vars <- self@vars
-		all_vars <- c(vars@A, vars@W, vars@W_trt, vars@W_cens, vars@Z, vars@M, vars@C, vars@Y)
+		all_vars <- c(vars@A, vars@W, vars@W_trt, vars@Z, vars@M, vars@C, vars@Y)
 		all_vars <- as.vector(na.omit(all_vars))
 
 		if (!all(all_vars %in% names(self@data))) {

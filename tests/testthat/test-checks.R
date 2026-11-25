@@ -13,7 +13,7 @@ test_that("checks columns in every covariate set", {
 		"absent"
 	)
 	expect_error(
-		crumble(d, "a", "y", "m", covar = list(cens = "w"), effect = "N"),
+		crumble(d, "a", "y", "m", covar = list(outcome = "w"), effect = "N"),
 		"Missing data found"
 	)
 	expect_error(

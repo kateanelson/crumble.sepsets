@@ -25,8 +25,7 @@ linear_permutation <- function(data) {
 set_zp <- function(cd, folds) {
 	folds <- make_folds(cd@data, folds, cd@vars@id)
 
-	baseline <- union(cd@vars@W_trt, cd@vars@W)
-	AW <- one_hot_encode(cd@data, c(cd@vars@A, baseline))
+	AW <- one_hot_encode(cd@data, c(cd@vars@A, cd@vars@W))
 	Z <- cd@data[, cd@vars@Z, drop = FALSE]
 
 	permute <- function(i) {

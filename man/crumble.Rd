@@ -40,23 +40,16 @@ A vector containing the column names of the mediator variables.}
 An optional vector containing the column names of the mediator-outcome confounders.}
 
 \item{covar}{[\code{character} or \code{list}]\cr
-Baseline covariate column names. A character vector uses the same covariates
-throughout. A named list can specify separate vectors for treatment and
-mediation density ratios (\code{trt}), the outcome observation model
-(\code{cens}), and the sequential outcome regressions (\code{outcome}).
-Omitted or \code{NULL} entries use no baseline covariates for that model.
-For randomized effects, the union of \code{trt} and \code{outcome}
-covariates is used to construct the permuted mediator-outcome confounders.
-For example, \code{list(trt = "w1", cens = "w2", outcome = c("w1", "w3"))}
-specifies three covariate sets. Each set must retain the variables needed
-to identify the corresponding nuisance function.}
+Baseline covariate column names. A character vector uses the same set
+throughout. A named list can supply \code{trt} for the exposure density
+ratio in the first Riesz stage and \code{outcome} for the remaining Riesz
+stages, outcome regressions, and permutation of mediator-outcome confounders.
+If \code{trt} is omitted, it uses the \code{outcome} set.
+Use \code{character(0)} for an empty set.}
 
 \item{obs}{[\code{character(1)}]\cr
 An optional column name (with values coded as 0 or 1) for whether or not the \code{outcome} is observed.
-Must be provided if there is missingness in the outcome! Default is \code{NULL}.
-A logistic regression of \code{obs} on treatment, mediators, mediator-outcome
-confounders, and the \code{cens} covariates supplies inverse probability
-weights for the final outcome residual.}
+Must be provided if there is missingness in the outcome! Default is \code{NULL}.}
 
 \item{id}{[\code{character(1)}]\cr
 An optional column name containing cluster level identifiers.}
